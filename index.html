@@ -1,0 +1,1579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>100 Song Music Challenge</title>
+<meta name="description" content="Listen. Identify. Score. Win. Can you identify 80+ songs out of 100?">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   100 SONG MUSIC CHALLENGE — STYLESHEET
+   Dark, mobile-first, single accent colour (neon orange).
+   ========================================================= */
+
+:root{
+  --bg:            #0a0a0d;
+  --bg-raised:     #131317;
+  --bg-card:       #17171c;
+  --line:          #26262d;
+  --text:          #f4f4f6;
+  --text-dim:      #9a9aa4;
+  --text-faint:    #5c5c66;
+  --accent:        #ff6a00;
+  --accent-soft:   rgba(255,106,0,.14);
+  --accent-glow:   rgba(255,106,0,.45);
+  --good:          #2fd66b;
+  --good-soft:     rgba(47,214,107,.14);
+  --bad:           #ff3b5c;
+  --bad-soft:      rgba(255,59,92,.14);
+  --whatsapp:      #25d366;
+
+  --font-display:  'Space Grotesk', 'Sora', sans-serif;
+  --font-body:     'Sora', system-ui, sans-serif;
+
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+
+  --shadow-card: 0 20px 50px -20px rgba(0,0,0,.6);
+  --ease: cubic-bezier(.22,1,.36,1);
+}
+
+*, *::before, *::after{ box-sizing:border-box; }
+
+html{ -webkit-text-size-adjust:100%; }
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-body);
+  line-height:1.5;
+  min-height:100vh;
+  overflow-x:hidden;
+  -webkit-tap-highlight-color:transparent;
+}
+
+h1,h2,h3{ font-family:var(--font-display); margin:0; }
+p{ margin:0; }
+
+button{ font-family:inherit; }
+
+::selection{ background:var(--accent); color:#0a0a0d; }
+
+/* ---------- Ambient background ---------- */
+.bg-noise{
+  position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:
+    radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,.035) 0, transparent 0),
+    radial-gradient(1px 1px at 70% 65%, rgba(255,255,255,.03) 0, transparent 0),
+    radial-gradient(1px 1px at 40% 80%, rgba(255,255,255,.03) 0, transparent 0);
+  background-size: 180px 180px;
+}
+.bg-glow{
+  position:fixed; z-index:0; pointer-events:none;
+  top:-20%; left:50%; transform:translateX(-50%);
+  width:140vw; height:60vh; max-width:900px;
+  background:radial-gradient(closest-side, var(--accent-soft), transparent 70%);
+  filter:blur(10px);
+}
+
+/* ---------- Layout ---------- */
+.screen{
+  position:relative; z-index:1;
+  display:none;
+  min-height:100vh;
+  min-height:100dvh;
+  padding: 28px 0 48px;
+  animation: fadeUp .5s var(--ease);
+}
+.screen.active{ display:block; }
+
+@keyframes fadeUp{
+  from{ opacity:0; transform:translateY(14px); }
+  to{ opacity:1; transform:translateY(0); }
+}
+
+.wrap{
+  width:100%;
+  max-width:520px;
+  margin:0 auto;
+  padding:0 20px;
+}
+.wrap-game{ max-width:560px; }
+
+/* ---------- Brand row ---------- */
+.brand-row{
+  display:flex; align-items:center; gap:8px;
+  margin-bottom:34px;
+}
+.brand-mark{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:34px; height:34px; border-radius:10px;
+  background:var(--accent); color:#0a0a0d;
+  font-size:18px; font-weight:700;
+  box-shadow:0 0 22px var(--accent-glow);
+}
+.brand-name{
+  font-family:var(--font-display); font-weight:700;
+  font-size:13px; letter-spacing:.14em; color:var(--text-dim);
+}
+
+/* ---------- Hero ---------- */
+.hero{ text-align:left; }
+.eyebrow{
+  font-size:12px; letter-spacing:.16em; font-weight:600;
+  color:var(--accent); margin-bottom:14px;
+  text-transform:uppercase;
+}
+.hero-title{
+  font-size:clamp(2.1rem, 9vw, 3.1rem);
+  line-height:1.02;
+  font-weight:700;
+  letter-spacing:-.02em;
+  margin-bottom:14px;
+}
+.hero-title span{
+  color:var(--accent);
+  text-shadow:0 0 34px var(--accent-glow);
+}
+.hero-sub{
+  font-size:1.2rem; font-weight:600; color:var(--text);
+  margin-bottom:18px;
+}
+.hero-copy{
+  color:var(--text-dim); font-size:.98rem; line-height:1.65;
+  max-width:46ch; margin-bottom:26px;
+}
+
+/* ---------- Prize strip ---------- */
+.prize-strip{
+  display:flex; align-items:center; gap:14px;
+  background:linear-gradient(135deg, var(--accent-soft), transparent);
+  border:1px solid rgba(255,106,0,.35);
+  border-radius:var(--radius-md);
+  padding:16px 18px;
+  margin-bottom:12px;
+}
+.prize-strip__icon{ font-size:28px; line-height:1; }
+.prize-strip__text{ display:flex; flex-direction:column; }
+.prize-strip__label{
+  font-size:11px; letter-spacing:.14em; color:var(--text-dim); font-weight:600;
+}
+.prize-strip__value{
+  font-family:var(--font-display); font-weight:700; font-size:1.25rem; color:var(--accent);
+}
+.highest-score-note{
+  color:var(--text-faint); font-size:.85rem; margin-bottom:28px;
+}
+
+/* ---------- Buttons ---------- */
+.btn{
+  appearance:none; border:none; cursor:pointer;
+  border-radius:999px;
+  font-family:var(--font-display); font-weight:700;
+  letter-spacing:.02em;
+  transition:transform .15s var(--ease), box-shadow .15s var(--ease), background .15s var(--ease), opacity .15s var(--ease);
+  touch-action:manipulation;
+}
+.btn:active{ transform:scale(.97); }
+.btn:focus-visible{ outline:3px solid #fff; outline-offset:3px; }
+
+.btn-primary{
+  background:var(--accent); color:#0a0a0d;
+  box-shadow:0 8px 26px -6px var(--accent-glow);
+}
+.btn-primary:hover{ box-shadow:0 10px 32px -4px var(--accent-glow); }
+.btn-primary:disabled{
+  background:#3a3a42; color:var(--text-faint);
+  box-shadow:none; cursor:not-allowed;
+}
+
+.btn-ghost{
+  background:transparent; color:var(--text);
+  border:1px solid var(--line);
+}
+.btn-ghost:hover{ border-color:var(--text-dim); }
+
+.btn-whatsapp{
+  background:var(--whatsapp); color:#06210f;
+  box-shadow:0 8px 26px -6px rgba(37,211,102,.45);
+}
+
+.btn-xl{
+  display:block; width:100%;
+  padding:17px 24px; font-size:1.02rem;
+  border-radius:16px;
+}
+
+.btn-link{
+  display:block; margin-top:16px; background:none; border:none;
+  color:var(--text-dim); font-size:.9rem; cursor:pointer; padding:6px 0;
+  text-decoration:none;
+}
+.btn-link:hover{ color:var(--accent); }
+
+.btn-back{
+  background:none; border:none; color:var(--text-dim);
+  font-family:var(--font-body); font-size:.92rem; cursor:pointer;
+  padding:6px 0; margin-bottom:18px;
+}
+.btn-back:hover{ color:var(--text); }
+
+/* ---------- Ad containers ---------- */
+.ad-container{
+  width:100%;
+  margin:28px 0;
+  border:1px dashed var(--line);
+  border-radius:var(--radius-md);
+  background:var(--bg-raised);
+  overflow:hidden;
+  position:relative;
+}
+.ad-label{
+  display:block;
+  font-size:10px; letter-spacing:.18em; font-weight:700;
+  color:var(--text-faint);
+  text-align:center;
+  padding:8px 0 0;
+}
+.ad-body{
+  min-height:80px;
+  display:flex; align-items:center; justify-content:center;
+  padding:8px 12px 16px;
+  color:var(--text-faint); font-size:.8rem;
+}
+.ad-body:empty::before{
+  content:'Ad space — insert ad network code here';
+}
+.ad-container--inline{ max-width:560px; margin:0 auto 24px; padding:0 20px; }
+@media (min-width:520px){
+  .ad-container--inline{ padding:0; }
+}
+
+/* ---------- Stat row ---------- */
+.stat-row{
+  display:grid; grid-template-columns:repeat(3,1fr); gap:10px;
+  margin-top:8px;
+}
+.stat-card{
+  background:var(--bg-card); border:1px solid var(--line);
+  border-radius:var(--radius-sm);
+  padding:16px 8px; text-align:center;
+}
+.stat-num{
+  display:block; font-family:var(--font-display); font-weight:700;
+  font-size:1.4rem; color:var(--accent);
+}
+.stat-label{
+  display:block; font-size:.72rem; color:var(--text-dim); margin-top:4px;
+  letter-spacing:.04em;
+}
+
+/* ---------- Rules ---------- */
+.section-title{
+  font-size:1.6rem; margin-bottom:20px; letter-spacing:-.01em;
+}
+.rules-list{
+  margin:0 0 8px; padding-left:22px;
+  display:flex; flex-direction:column; gap:14px;
+}
+.rules-list li{
+  color:var(--text-dim); font-size:.96rem; line-height:1.55;
+  padding-left:4px;
+}
+.rules-list li::marker{ color:var(--accent); font-weight:700; }
+
+/* ---------- Modal ---------- */
+.modal-overlay{
+  display:none; position:fixed; inset:0; z-index:50;
+  background:rgba(6,6,8,.72);
+  backdrop-filter:blur(6px);
+  align-items:flex-end;
+  justify-content:center;
+  padding:0;
+}
+.modal-overlay.active{ display:flex; animation:fadeIn .2s var(--ease); }
+@keyframes fadeIn{ from{ opacity:0; } to{ opacity:1; } }
+
+.modal-card{
+  width:100%; max-width:480px;
+  background:var(--bg-card);
+  border:1px solid var(--line);
+  border-radius:22px 22px 0 0;
+  padding:26px 22px 30px;
+  animation:slideUp .3s var(--ease);
+}
+@media (min-width:560px){
+  .modal-overlay{ align-items:center; }
+  .modal-card{ border-radius:22px; }
+}
+@keyframes slideUp{
+  from{ transform:translateY(30px); opacity:0; }
+  to{ transform:translateY(0); opacity:1; }
+}
+.modal-card h3{ font-size:1.3rem; margin-bottom:6px; }
+.modal-sub{ color:var(--text-dim); font-size:.92rem; margin-bottom:18px; }
+.modal-actions{ display:flex; gap:10px; margin-top:18px; }
+.modal-actions .btn{ flex:1; padding:14px 18px; font-size:.95rem; }
+
+.text-input{
+  width:100%; background:var(--bg-raised);
+  border:1px solid var(--line); color:var(--text);
+  border-radius:14px; padding:15px 16px; font-size:1rem;
+  font-family:var(--font-body);
+}
+.text-input:focus-visible{ outline:2px solid var(--accent); outline-offset:1px; }
+.input-error{ color:var(--bad); font-size:.82rem; margin-top:8px; }
+
+/* ---------- Game top bar ---------- */
+.game-topbar{
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:14px;
+}
+.song-counter{
+  font-family:var(--font-display); font-weight:700; font-size:1rem;
+  letter-spacing:.03em;
+}
+.score-pill{
+  background:var(--bg-card); border:1px solid var(--line);
+  border-radius:999px; padding:7px 14px;
+  font-size:.82rem; font-weight:600; color:var(--accent);
+}
+
+.progress-track{
+  width:100%; height:8px; border-radius:999px;
+  background:var(--bg-card); border:1px solid var(--line);
+  overflow:hidden; margin-bottom:26px;
+}
+.progress-fill{
+  height:100%; width:0%;
+  background:linear-gradient(90deg, var(--accent), #ffb27a);
+  border-radius:999px;
+  transition:width .4s var(--ease);
+}
+
+/* ---------- Phase card ---------- */
+.phase-card{
+  background:var(--bg-card);
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  padding:32px 22px 30px;
+  text-align:center;
+  box-shadow:var(--shadow-card);
+}
+.phase-eyebrow{
+  font-size:.82rem; font-weight:700; letter-spacing:.1em;
+  color:var(--text-dim); margin-bottom:22px; text-transform:uppercase;
+}
+
+/* Disc spinner */
+.disc{
+  width:104px; height:104px; margin:0 auto 26px;
+  position:relative;
+  border-radius:50%;
+  background:
+    repeating-radial-gradient(circle at center, #1c1c22 0 2px, #232329 2px 4px);
+  border:1px solid var(--line);
+  animation:spin 3.2s linear infinite;
+  box-shadow:0 0 40px -8px var(--accent-glow);
+}
+.disc-ring{
+  position:absolute; inset:14px; border-radius:50%;
+  border:2px solid var(--accent); opacity:.55;
+}
+.disc-hole{
+  position:absolute; top:50%; left:50%;
+  width:14px; height:14px; border-radius:50%;
+  background:var(--bg); transform:translate(-50%,-50%);
+  border:2px solid var(--accent);
+}
+@keyframes spin{ to{ transform:rotate(360deg); } }
+.disc.paused{ animation-play-state:paused; }
+
+/* Countdown ring */
+.countdown-wrap{
+  position:relative; width:140px; height:140px; margin:0 auto 18px;
+}
+.countdown-ring{ width:100%; height:100%; transform:rotate(-90deg); }
+.countdown-ring__bg{
+  fill:none; stroke:var(--line); stroke-width:8;
+}
+.countdown-ring__fg{
+  fill:none; stroke:var(--accent); stroke-width:8;
+  stroke-linecap:round;
+  stroke-dasharray:339.292;
+  stroke-dashoffset:0;
+  transition:stroke-dashoffset 1s linear;
+  filter:drop-shadow(0 0 8px var(--accent-glow));
+}
+.countdown-num{
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-display); font-weight:700; font-size:2.6rem;
+}
+
+.tap-play-msg{
+  color:var(--accent); font-weight:600; margin-bottom:14px; font-size:.95rem;
+}
+.clip-hint{ color:var(--text-faint); font-size:.85rem; margin-top:16px; }
+
+.load-error{ margin-top:18px; color:var(--bad); }
+.load-error p{ margin-bottom:12px; font-size:.9rem; }
+.load-error .btn{ padding:12px 26px; display:inline-block; width:auto; }
+
+/* ---------- Choices ---------- */
+.choices-wrap{
+  display:flex; flex-direction:column; gap:12px;
+  margin-bottom:8px;
+}
+.choice-btn{
+  width:100%; text-align:left;
+  background:var(--bg-raised); border:1px solid var(--line);
+  color:var(--text); border-radius:14px;
+  padding:16px 18px; font-size:.98rem; font-weight:600;
+  cursor:pointer; transition:all .15s var(--ease);
+  display:flex; align-items:center; gap:12px;
+}
+.choice-btn__letter{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:26px; height:26px; border-radius:8px;
+  background:var(--bg-card); border:1px solid var(--line);
+  font-size:.78rem; font-weight:700; color:var(--text-dim);
+  flex-shrink:0;
+}
+.choice-btn:not(:disabled):active{ transform:scale(.98); }
+.choice-btn:not(:disabled):hover{ border-color:var(--accent); }
+.choice-btn:disabled{ cursor:default; }
+
+.choice-btn.is-correct{
+  background:var(--good-soft); border-color:var(--good); color:var(--good);
+}
+.choice-btn.is-correct .choice-btn__letter{ background:var(--good); border-color:var(--good); color:#06210f; }
+.choice-btn.is-wrong{
+  background:var(--bad-soft); border-color:var(--bad); color:var(--bad);
+}
+.choice-btn.is-wrong .choice-btn__letter{ background:var(--bad); border-color:var(--bad); color:#2a0006; }
+.choice-btn.is-dimmed{ opacity:.45; }
+
+.answer-feedback{
+  margin-top:18px; padding:14px; border-radius:14px;
+  font-family:var(--font-display); font-weight:700; font-size:1.05rem;
+  animation:popIn .25s var(--ease);
+}
+.answer-feedback.correct{ background:var(--good-soft); color:var(--good); }
+.answer-feedback.wrong{ background:var(--bad-soft); color:var(--bad); }
+@keyframes popIn{ from{ transform:scale(.9); opacity:0; } to{ transform:scale(1); opacity:1; } }
+
+.type-answer-wrap{ display:flex; flex-direction:column; gap:14px; }
+
+/* ---------- Results ---------- */
+.result-card{
+  background:linear-gradient(180deg, var(--bg-card), var(--bg-raised));
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  padding:36px 24px 30px;
+  text-align:center;
+  box-shadow:var(--shadow-card);
+  position:relative;
+  overflow:hidden;
+}
+.result-card::before{
+  content:''; position:absolute; top:-40%; left:50%; transform:translateX(-50%);
+  width:220%; height:220px;
+  background:radial-gradient(closest-side, var(--accent-soft), transparent 70%);
+  pointer-events:none;
+}
+.result-trophy{ font-size:2.6rem; margin-bottom:6px; position:relative; }
+.result-heading{ font-size:1.5rem; margin-bottom:22px; position:relative; letter-spacing:-.01em; }
+
+.result-line{
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  margin-bottom:16px; position:relative;
+}
+.result-label{
+  font-size:.72rem; letter-spacing:.12em; color:var(--text-dim); font-weight:700;
+}
+.result-value{ font-weight:700; font-size:1rem; }
+.result-id{ color:var(--accent); font-family:var(--font-display); letter-spacing:.04em; }
+
+.result-score{
+  font-family:var(--font-display); font-weight:700;
+  font-size:3rem; line-height:1; color:var(--text);
+  margin-bottom:6px; position:relative;
+}
+.result-percent{
+  font-family:var(--font-display); font-weight:700; font-size:1.3rem;
+  color:var(--accent); margin-bottom:24px; position:relative;
+}
+
+.screenshot-callout{
+  background:var(--bg-raised); border:1px dashed var(--line);
+  border-radius:14px; padding:14px 16px; margin-bottom:16px;
+  position:relative; font-size:.9rem;
+}
+.screenshot-callout p:first-child{ margin-bottom:4px; }
+.screenshot-callout p:last-child{ color:var(--text-dim); }
+
+.winner-callout{
+  position:relative; font-size:.85rem;
+  color:var(--text-dim); padding-top:6px;
+}
+.winner-callout__prize{
+  font-family:var(--font-display); font-weight:700; color:var(--accent);
+  font-size:1.05rem; margin-top:4px;
+}
+
+.results-actions{ display:flex; flex-direction:column; gap:12px; margin-top:24px; }
+.results-disclaimer{
+  color:var(--text-faint); font-size:.78rem; line-height:1.5;
+  margin-top:16px; text-align:center;
+}
+
+/* ---------- Toast ---------- */
+.toast{
+  position:fixed; left:50%; bottom:24px; transform:translateX(-50%);
+  background:var(--bg-card); border:1px solid var(--line);
+  color:var(--text); padding:12px 20px; border-radius:999px;
+  font-size:.88rem; z-index:80; box-shadow:var(--shadow-card);
+  animation:toastIn .25s var(--ease);
+}
+@keyframes toastIn{ from{ opacity:0; transform:translate(-50%,10px); } to{ opacity:1; transform:translate(-50%,0); } }
+
+/* ---------- Responsive: tablet/desktop ---------- */
+@media (min-width:720px){
+  .hero{ text-align:left; }
+  .stat-row{ gap:16px; }
+  .phase-card{ padding:44px 40px 40px; }
+  .result-card{ padding:46px 40px 36px; }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; }
+  .disc{ animation:none; }
+}
+
+/* ---------- Focus visibility everywhere ---------- */
+a:focus-visible, button:focus-visible, input:focus-visible{
+  outline:3px solid var(--accent);
+  outline-offset:2px;
+}
+
+</style>
+</head>
+<body>
+
+<!-- Background ambience -->
+<div class="bg-noise" aria-hidden="true"></div>
+<div class="bg-glow" aria-hidden="true"></div>
+
+<!-- ===================== HOME SCREEN ===================== -->
+<section id="screen-home" class="screen active" aria-labelledby="home-title">
+  <div class="wrap">
+
+    <header class="brand-row">
+      <span class="brand-mark">♪</span>
+      <span class="brand-name">MUSIC CHALLENGE</span>
+    </header>
+
+    <div class="hero">
+      <p class="eyebrow">100 TRACKS · ONE SHOT EACH</p>
+      <h1 id="home-title" class="hero-title">100 SONG<br><span>MUSIC CHALLENGE</span></h1>
+      <p class="hero-sub">Listen. Identify. Score. Win.</p>
+
+      <p class="hero-copy">
+        Can you identify 80+ songs out of 100? You'll hear roughly 30 seconds of each
+        track — trust your ear and lock in your answer before time runs out.
+      </p>
+
+      <div class="prize-strip">
+        <div class="prize-strip__icon">🏆</div>
+        <div class="prize-strip__text">
+          <span class="prize-strip__label">PRIZE</span>
+          <span class="prize-strip__value" id="prizeText">R50 VOUCHER</span>
+        </div>
+      </div>
+      <p class="highest-score-note">Highest score wins. No ties, no shortcuts — just your ears.</p>
+
+      <button id="btnOpenStart" class="btn btn-primary btn-xl" type="button">
+        START CHALLENGE
+      </button>
+
+      <button id="btnOpenRules" class="btn-link" type="button">How does this work? →</button>
+    </div>
+
+    <!-- Ad slot: Home page -->
+    <div class="ad-container" data-ad-slot="home">
+      <span class="ad-label">ADVERTISEMENT</span>
+      <div class="ad-body">
+        <!-- INSERT AD NETWORK CODE HERE -->
+      </div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-card">
+        <span class="stat-num" id="statTotalSongs">100</span>
+        <span class="stat-label">Songs</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">30s</span>
+        <span class="stat-label">Per clip</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">1</span>
+        <span class="stat-label">Attempt each</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===================== RULES SCREEN ===================== -->
+<section id="screen-rules" class="screen" aria-labelledby="rules-title">
+  <div class="wrap">
+    <button class="btn-back" id="btnRulesBack" type="button" aria-label="Back">← Back</button>
+    <h2 id="rules-title" class="section-title">COMPETITION RULES</h2>
+    <ol class="rules-list">
+      <li>The challenge contains 100 songs.</li>
+      <li>Each song plays for approximately 30 seconds.</li>
+      <li>You receive 1 point for each correct answer.</li>
+      <li>You get only one answer per song.</li>
+      <li>You cannot return to previous questions.</li>
+      <li>After completing all 100 songs, screenshot your final result.</li>
+      <li>Send your screenshot to the competition group.</li>
+      <li>The participant with the highest verified score wins.</li>
+      <li>The R50 voucher is manually awarded by the competition organizer.</li>
+      <li>The organizer has final authority to verify results and determine the winner.</li>
+    </ol>
+
+    <div class="ad-container" data-ad-slot="rules">
+      <span class="ad-label">ADVERTISEMENT</span>
+      <div class="ad-body">
+        <!-- INSERT AD NETWORK CODE HERE -->
+      </div>
+    </div>
+
+    <button id="btnRulesStart" class="btn btn-primary btn-xl" type="button">START CHALLENGE</button>
+  </div>
+</section>
+
+<!-- ===================== NAME ENTRY MODAL ===================== -->
+<div id="modalName" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalNameTitle">
+  <div class="modal-card">
+    <h3 id="modalNameTitle">Who's playing?</h3>
+    <p class="modal-sub">Enter a name or nickname — no account needed.</p>
+    <input id="inputPlayerName" class="text-input" type="text" maxlength="24" placeholder="e.g. Chuma" autocomplete="off" aria-label="Your name or nickname">
+    <p class="input-error" id="nameError" role="alert" hidden>Please enter a name to continue.</p>
+    <div class="modal-actions">
+      <button id="btnCancelName" class="btn btn-ghost" type="button">Cancel</button>
+      <button id="btnConfirmName" class="btn btn-primary" type="button">Let's go 🎧</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== RESUME MODAL ===================== -->
+<div id="modalResume" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalResumeTitle">
+  <div class="modal-card">
+    <h3 id="modalResumeTitle">Challenge in progress</h3>
+    <p class="modal-sub" id="resumeSummary">Your challenge is in progress. Continue?</p>
+    <div class="modal-actions">
+      <button id="btnStartNew" class="btn btn-ghost" type="button">START NEW</button>
+      <button id="btnContinue" class="btn btn-primary" type="button">CONTINUE</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== GAME SCREEN ===================== -->
+<section id="screen-game" class="screen" aria-labelledby="game-live-label">
+  <div class="wrap wrap-game">
+
+    <div class="game-topbar">
+      <div class="song-counter" id="songCounter">SONG 1 / 100</div>
+      <div class="score-pill" id="scorePill">SCORE: 0 / 0</div>
+    </div>
+
+    <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressBar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <!-- LISTEN PHASE -->
+    <div id="phaseListen" class="phase-card">
+      <p class="phase-eyebrow">🎵 LISTEN CAREFULLY</p>
+      <div class="disc" id="discSpinner" aria-hidden="true">
+        <div class="disc-ring"></div>
+        <div class="disc-hole"></div>
+      </div>
+
+      <div class="countdown-wrap">
+        <svg class="countdown-ring" viewBox="0 0 120 120" aria-hidden="true">
+          <circle class="countdown-ring__bg" cx="60" cy="60" r="54"></circle>
+          <circle class="countdown-ring__fg" id="countdownRing" cx="60" cy="60" r="54"></circle>
+        </svg>
+        <span class="countdown-num" id="countdownNum">30</span>
+      </div>
+
+      <p class="tap-play-msg" id="tapPlayMsg" hidden>Tap PLAY to listen</p>
+      <button id="btnManualPlay" class="btn btn-primary btn-xl" type="button" hidden>▶ PLAY</button>
+
+      <p class="clip-hint" id="clipHint">Playing 30-second clip…</p>
+
+      <div class="load-error" id="loadError" hidden>
+        <p>⚠️ Unable to load this song. Please try again.</p>
+        <button id="btnRetryLoad" class="btn btn-primary" type="button">RETRY</button>
+      </div>
+    </div>
+
+    <!-- ANSWER PHASE -->
+    <div id="phaseAnswer" class="phase-card" hidden>
+      <p class="phase-eyebrow">WHICH SONG IS THIS?</p>
+
+      <div id="choicesWrap" class="choices-wrap"></div>
+
+      <div id="typeAnswerWrap" class="type-answer-wrap" hidden>
+        <input id="inputAnswer" class="text-input" type="text" placeholder="Type song title…" autocomplete="off" aria-label="Type your answer">
+        <button id="btnSubmitTyped" class="btn btn-primary btn-xl" type="button">SUBMIT ANSWER</button>
+      </div>
+
+      <div id="answerFeedback" class="answer-feedback" hidden></div>
+    </div>
+
+  </div>
+
+  <!-- Ad slot: between competition sections (shown every N songs) -->
+  <div class="ad-container ad-container--inline" data-ad-slot="mid-game" id="midGameAd" hidden>
+    <span class="ad-label">ADVERTISEMENT</span>
+    <div class="ad-body">
+      <!-- INSERT AD NETWORK CODE HERE -->
+    </div>
+  </div>
+
+  <audio id="audioPlayer" preload="none" playsinline></audio>
+</section>
+
+<!-- ===================== RESULTS SCREEN ===================== -->
+<section id="screen-results" class="screen" aria-labelledby="results-title">
+  <div class="wrap">
+
+    <div class="result-card" id="resultCard">
+      <p class="result-trophy">🏆</p>
+      <h2 id="results-title" class="result-heading">CHALLENGE COMPLETE!</h2>
+
+      <p class="result-line result-line--player">
+        <span class="result-label">PLAYER</span>
+        <span class="result-value" id="resultPlayer">—</span>
+      </p>
+
+      <p class="result-score" id="resultScore">0 / 100</p>
+      <p class="result-percent" id="resultPercent">0%</p>
+
+      <p class="result-line">
+        <span class="result-label">RESULT ID</span>
+        <span class="result-value result-id" id="resultId">—</span>
+      </p>
+
+      <div class="screenshot-callout">
+        <p>📸 <strong>SCREENSHOT THIS RESULT</strong></p>
+        <p>Send your screenshot to the competition group.</p>
+      </div>
+
+      <div class="winner-callout">
+        <p>🏆 HIGHEST SCORE WINS</p>
+        <p class="winner-callout__prize" id="resultPrizeText">PRIZE: R50 VOUCHER</p>
+      </div>
+    </div>
+
+    <div class="results-actions">
+      <button id="btnShareWhatsapp" class="btn btn-whatsapp btn-xl" type="button">SHARE TO WHATSAPP</button>
+      <button id="btnPlayAgain" class="btn btn-primary btn-xl" type="button">PLAY AGAIN</button>
+    </div>
+
+    <p class="results-disclaimer">
+      Sharing to WhatsApp does not verify your score. You must still submit a screenshot of this screen —
+      the organizer verifies all results manually before awarding the prize.
+    </p>
+
+    <!-- Ad slot: Final results page -->
+    <div class="ad-container" data-ad-slot="results">
+      <span class="ad-label">ADVERTISEMENT</span>
+      <div class="ad-body">
+        <!-- INSERT AD NETWORK CODE HERE -->
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+<script>
+/* =========================================================
+   100 SONG MUSIC CHALLENGE — APP LOGIC
+   Pure vanilla JavaScript. No frameworks, no backend.
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   1. CONFIGURATION
+   Edit this section to rebrand the competition.
+   --------------------------------------------------------- */
+const competitionConfig = {
+  competitionName: "100 Song Music Challenge",
+  prize: "R50 Voucher",
+  clipDuration: 30,       // seconds each clip plays for
+  totalSongs: 100,        // target song count (app also works with fewer, for testing)
+  midGameAdEvery: 10,     // show an inline ad every N songs (0 = never)
+  storageKey: "musicChallenge_v1"
+};
+
+/* ---------------------------------------------------------
+   2. SONG LIBRARY
+   Replace title / artist / file for each entry.
+   Only the songs actually present here are used — you do
+   NOT need all 100 filled in to test the app.
+
+   IMPORTANT: Do not put copyrighted commercial audio in a
+   public repo unless you hold the rights to use it. File
+   paths below are placeholders — put your own MP3s in
+   /songs/ and update the "file" field to match.
+   --------------------------------------------------------- */
+// TIP FOR TESTING: while you're setting things up, it's fine to delete
+// most of these lines and test with just 4-8 songs — the app adjusts
+// automatically to however many entries are in this array.
+const songs = [
+  { title: "Song Title 01", artist: "Artist 01", file: "songs/song01.mp3" },
+  { title: "Song Title 02", artist: "Artist 02", file: "songs/song02.mp3" },
+  { title: "Song Title 03", artist: "Artist 03", file: "songs/song03.mp3" },
+  { title: "Song Title 04", artist: "Artist 04", file: "songs/song04.mp3" },
+  { title: "Song Title 05", artist: "Artist 05", file: "songs/song05.mp3" },
+  { title: "Song Title 06", artist: "Artist 06", file: "songs/song06.mp3" },
+  { title: "Song Title 07", artist: "Artist 07", file: "songs/song07.mp3" },
+  { title: "Song Title 08", artist: "Artist 08", file: "songs/song08.mp3" },
+  { title: "Song Title 09", artist: "Artist 09", file: "songs/song09.mp3" },
+  { title: "Song Title 10", artist: "Artist 10", file: "songs/song10.mp3" },
+  { title: "Song Title 11", artist: "Artist 11", file: "songs/song11.mp3" },
+  { title: "Song Title 12", artist: "Artist 12", file: "songs/song12.mp3" },
+  { title: "Song Title 13", artist: "Artist 13", file: "songs/song13.mp3" },
+  { title: "Song Title 14", artist: "Artist 14", file: "songs/song14.mp3" },
+  { title: "Song Title 15", artist: "Artist 15", file: "songs/song15.mp3" },
+  { title: "Song Title 16", artist: "Artist 16", file: "songs/song16.mp3" },
+  { title: "Song Title 17", artist: "Artist 17", file: "songs/song17.mp3" },
+  { title: "Song Title 18", artist: "Artist 18", file: "songs/song18.mp3" },
+  { title: "Song Title 19", artist: "Artist 19", file: "songs/song19.mp3" },
+  { title: "Song Title 20", artist: "Artist 20", file: "songs/song20.mp3" },
+  { title: "Song Title 21", artist: "Artist 21", file: "songs/song21.mp3" },
+  { title: "Song Title 22", artist: "Artist 22", file: "songs/song22.mp3" },
+  { title: "Song Title 23", artist: "Artist 23", file: "songs/song23.mp3" },
+  { title: "Song Title 24", artist: "Artist 24", file: "songs/song24.mp3" },
+  { title: "Song Title 25", artist: "Artist 25", file: "songs/song25.mp3" },
+  { title: "Song Title 26", artist: "Artist 26", file: "songs/song26.mp3" },
+  { title: "Song Title 27", artist: "Artist 27", file: "songs/song27.mp3" },
+  { title: "Song Title 28", artist: "Artist 28", file: "songs/song28.mp3" },
+  { title: "Song Title 29", artist: "Artist 29", file: "songs/song29.mp3" },
+  { title: "Song Title 30", artist: "Artist 30", file: "songs/song30.mp3" },
+  { title: "Song Title 31", artist: "Artist 31", file: "songs/song31.mp3" },
+  { title: "Song Title 32", artist: "Artist 32", file: "songs/song32.mp3" },
+  { title: "Song Title 33", artist: "Artist 33", file: "songs/song33.mp3" },
+  { title: "Song Title 34", artist: "Artist 34", file: "songs/song34.mp3" },
+  { title: "Song Title 35", artist: "Artist 35", file: "songs/song35.mp3" },
+  { title: "Song Title 36", artist: "Artist 36", file: "songs/song36.mp3" },
+  { title: "Song Title 37", artist: "Artist 37", file: "songs/song37.mp3" },
+  { title: "Song Title 38", artist: "Artist 38", file: "songs/song38.mp3" },
+  { title: "Song Title 39", artist: "Artist 39", file: "songs/song39.mp3" },
+  { title: "Song Title 40", artist: "Artist 40", file: "songs/song40.mp3" },
+  { title: "Song Title 41", artist: "Artist 41", file: "songs/song41.mp3" },
+  { title: "Song Title 42", artist: "Artist 42", file: "songs/song42.mp3" },
+  { title: "Song Title 43", artist: "Artist 43", file: "songs/song43.mp3" },
+  { title: "Song Title 44", artist: "Artist 44", file: "songs/song44.mp3" },
+  { title: "Song Title 45", artist: "Artist 45", file: "songs/song45.mp3" },
+  { title: "Song Title 46", artist: "Artist 46", file: "songs/song46.mp3" },
+  { title: "Song Title 47", artist: "Artist 47", file: "songs/song47.mp3" },
+  { title: "Song Title 48", artist: "Artist 48", file: "songs/song48.mp3" },
+  { title: "Song Title 49", artist: "Artist 49", file: "songs/song49.mp3" },
+  { title: "Song Title 50", artist: "Artist 50", file: "songs/song50.mp3" },
+  { title: "Song Title 51", artist: "Artist 51", file: "songs/song51.mp3" },
+  { title: "Song Title 52", artist: "Artist 52", file: "songs/song52.mp3" },
+  { title: "Song Title 53", artist: "Artist 53", file: "songs/song53.mp3" },
+  { title: "Song Title 54", artist: "Artist 54", file: "songs/song54.mp3" },
+  { title: "Song Title 55", artist: "Artist 55", file: "songs/song55.mp3" },
+  { title: "Song Title 56", artist: "Artist 56", file: "songs/song56.mp3" },
+  { title: "Song Title 57", artist: "Artist 57", file: "songs/song57.mp3" },
+  { title: "Song Title 58", artist: "Artist 58", file: "songs/song58.mp3" },
+  { title: "Song Title 59", artist: "Artist 59", file: "songs/song59.mp3" },
+  { title: "Song Title 60", artist: "Artist 60", file: "songs/song60.mp3" },
+  { title: "Song Title 61", artist: "Artist 61", file: "songs/song61.mp3" },
+  { title: "Song Title 62", artist: "Artist 62", file: "songs/song62.mp3" },
+  { title: "Song Title 63", artist: "Artist 63", file: "songs/song63.mp3" },
+  { title: "Song Title 64", artist: "Artist 64", file: "songs/song64.mp3" },
+  { title: "Song Title 65", artist: "Artist 65", file: "songs/song65.mp3" },
+  { title: "Song Title 66", artist: "Artist 66", file: "songs/song66.mp3" },
+  { title: "Song Title 67", artist: "Artist 67", file: "songs/song67.mp3" },
+  { title: "Song Title 68", artist: "Artist 68", file: "songs/song68.mp3" },
+  { title: "Song Title 69", artist: "Artist 69", file: "songs/song69.mp3" },
+  { title: "Song Title 70", artist: "Artist 70", file: "songs/song70.mp3" },
+  { title: "Song Title 71", artist: "Artist 71", file: "songs/song71.mp3" },
+  { title: "Song Title 72", artist: "Artist 72", file: "songs/song72.mp3" },
+  { title: "Song Title 73", artist: "Artist 73", file: "songs/song73.mp3" },
+  { title: "Song Title 74", artist: "Artist 74", file: "songs/song74.mp3" },
+  { title: "Song Title 75", artist: "Artist 75", file: "songs/song75.mp3" },
+  { title: "Song Title 76", artist: "Artist 76", file: "songs/song76.mp3" },
+  { title: "Song Title 77", artist: "Artist 77", file: "songs/song77.mp3" },
+  { title: "Song Title 78", artist: "Artist 78", file: "songs/song78.mp3" },
+  { title: "Song Title 79", artist: "Artist 79", file: "songs/song79.mp3" },
+  { title: "Song Title 80", artist: "Artist 80", file: "songs/song80.mp3" },
+  { title: "Song Title 81", artist: "Artist 81", file: "songs/song81.mp3" },
+  { title: "Song Title 82", artist: "Artist 82", file: "songs/song82.mp3" },
+  { title: "Song Title 83", artist: "Artist 83", file: "songs/song83.mp3" },
+  { title: "Song Title 84", artist: "Artist 84", file: "songs/song84.mp3" },
+  { title: "Song Title 85", artist: "Artist 85", file: "songs/song85.mp3" },
+  { title: "Song Title 86", artist: "Artist 86", file: "songs/song86.mp3" },
+  { title: "Song Title 87", artist: "Artist 87", file: "songs/song87.mp3" },
+  { title: "Song Title 88", artist: "Artist 88", file: "songs/song88.mp3" },
+  { title: "Song Title 89", artist: "Artist 89", file: "songs/song89.mp3" },
+  { title: "Song Title 90", artist: "Artist 90", file: "songs/song90.mp3" },
+  { title: "Song Title 91", artist: "Artist 91", file: "songs/song91.mp3" },
+  { title: "Song Title 92", artist: "Artist 92", file: "songs/song92.mp3" },
+  { title: "Song Title 93", artist: "Artist 93", file: "songs/song93.mp3" },
+  { title: "Song Title 94", artist: "Artist 94", file: "songs/song94.mp3" },
+  { title: "Song Title 95", artist: "Artist 95", file: "songs/song95.mp3" },
+  { title: "Song Title 96", artist: "Artist 96", file: "songs/song96.mp3" },
+  { title: "Song Title 97", artist: "Artist 97", file: "songs/song97.mp3" },
+  { title: "Song Title 98", artist: "Artist 98", file: "songs/song98.mp3" },
+  { title: "Song Title 99", artist: "Artist 99", file: "songs/song99.mp3" },
+  { title: "Song Title 100", artist: "Artist 100", file: "songs/song100.mp3" }
+];
+
+/* ---------------------------------------------------------
+   3. STATE
+   Held in memory for the current session. A trimmed copy is
+   mirrored to localStorage purely so an accidental refresh
+   doesn't lose progress — see SECURITY note near saveProgress().
+   --------------------------------------------------------- */
+const state = {
+  playerName: "",
+  order: [],          // shuffled indexes into `songs`, one full pass
+  currentIndex: 0,     // pointer into `order`
+  score: 0,
+  answered: false,
+  currentChoices: [],  // the 4 answers shown for the current song
+  correctChoice: "",
+  resultId: "",
+  clipTimer: null,
+  clipSecondsLeft: competitionConfig.clipDuration,
+  autoStopTimeout: null
+};
+
+/* ---------------------------------------------------------
+   4. DOM REFERENCES
+   --------------------------------------------------------- */
+const el = {
+  screens: {
+    home: document.getElementById("screen-home"),
+    rules: document.getElementById("screen-rules"),
+    game: document.getElementById("screen-game"),
+    results: document.getElementById("screen-results")
+  },
+  btnOpenStart: document.getElementById("btnOpenStart"),
+  btnOpenRules: document.getElementById("btnOpenRules"),
+  btnRulesBack: document.getElementById("btnRulesBack"),
+  btnRulesStart: document.getElementById("btnRulesStart"),
+  statTotalSongs: document.getElementById("statTotalSongs"),
+  prizeText: document.getElementById("prizeText"),
+
+  modalName: document.getElementById("modalName"),
+  inputPlayerName: document.getElementById("inputPlayerName"),
+  nameError: document.getElementById("nameError"),
+  btnCancelName: document.getElementById("btnCancelName"),
+  btnConfirmName: document.getElementById("btnConfirmName"),
+
+  modalResume: document.getElementById("modalResume"),
+  resumeSummary: document.getElementById("resumeSummary"),
+  btnStartNew: document.getElementById("btnStartNew"),
+  btnContinue: document.getElementById("btnContinue"),
+
+  songCounter: document.getElementById("songCounter"),
+  scorePill: document.getElementById("scorePill"),
+  progressBar: document.getElementById("progressBar"),
+  progressFill: document.getElementById("progressFill"),
+
+  phaseListen: document.getElementById("phaseListen"),
+  phaseAnswer: document.getElementById("phaseAnswer"),
+  discSpinner: document.getElementById("discSpinner"),
+  countdownRing: document.getElementById("countdownRing"),
+  countdownNum: document.getElementById("countdownNum"),
+  tapPlayMsg: document.getElementById("tapPlayMsg"),
+  btnManualPlay: document.getElementById("btnManualPlay"),
+  clipHint: document.getElementById("clipHint"),
+  loadError: document.getElementById("loadError"),
+  btnRetryLoad: document.getElementById("btnRetryLoad"),
+
+  choicesWrap: document.getElementById("choicesWrap"),
+  typeAnswerWrap: document.getElementById("typeAnswerWrap"),
+  inputAnswer: document.getElementById("inputAnswer"),
+  btnSubmitTyped: document.getElementById("btnSubmitTyped"),
+  answerFeedback: document.getElementById("answerFeedback"),
+
+  midGameAd: document.getElementById("midGameAd"),
+  audioPlayer: document.getElementById("audioPlayer"),
+
+  resultCard: document.getElementById("resultCard"),
+  resultPlayer: document.getElementById("resultPlayer"),
+  resultScore: document.getElementById("resultScore"),
+  resultPercent: document.getElementById("resultPercent"),
+  resultId: document.getElementById("resultId"),
+  resultPrizeText: document.getElementById("resultPrizeText"),
+  btnShareWhatsapp: document.getElementById("btnShareWhatsapp"),
+  btnPlayAgain: document.getElementById("btnPlayAgain"),
+
+  toast: document.getElementById("toast")
+};
+
+const RING_CIRCUMFERENCE = 2 * Math.PI * 54; // matches r=54 in the SVG
+
+/* ---------------------------------------------------------
+   5. SCREEN NAVIGATION
+   --------------------------------------------------------- */
+function showScreen(name){
+  Object.values(el.screens).forEach(s => s.classList.remove("active"));
+  el.screens[name].classList.add("active");
+  window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
+}
+
+function openModal(modal){ modal.classList.add("active"); }
+function closeModal(modal){ modal.classList.remove("active"); }
+
+function showToast(msg, duration = 2200){
+  el.toast.textContent = msg;
+  el.toast.hidden = false;
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => { el.toast.hidden = true; }, duration);
+}
+
+/* ---------------------------------------------------------
+   6. INITIAL SETUP
+   --------------------------------------------------------- */
+function init(){
+  const activeSongCount = songs.length;
+  el.statTotalSongs.textContent = activeSongCount;
+  el.prizeText.textContent = competitionConfig.prize.toUpperCase();
+  el.resultPrizeText.textContent = `PRIZE: ${competitionConfig.prize.toUpperCase()}`;
+  document.title = competitionConfig.competitionName;
+
+  bindEvents();
+  checkForResumableProgress();
+}
+
+function bindEvents(){
+  el.btnOpenStart.addEventListener("click", handleStartRequest);
+  el.btnRulesStart.addEventListener("click", handleStartRequest);
+  el.btnOpenRules.addEventListener("click", () => showScreen("rules"));
+  el.btnRulesBack.addEventListener("click", () => showScreen("home"));
+
+  el.btnCancelName.addEventListener("click", () => closeModal(el.modalName));
+  el.btnConfirmName.addEventListener("click", confirmNameAndBegin);
+  el.inputPlayerName.addEventListener("keydown", e => {
+    if (e.key === "Enter") confirmNameAndBegin();
+  });
+
+  el.btnStartNew.addEventListener("click", () => {
+    clearProgress();
+    closeModal(el.modalResume);
+    requestNameThenStart();
+  });
+  el.btnContinue.addEventListener("click", () => {
+    closeModal(el.modalResume);
+    resumeSavedGame();
+  });
+
+  el.btnManualPlay.addEventListener("click", playCurrentClip);
+  el.btnRetryLoad.addEventListener("click", playCurrentClip);
+  el.btnSubmitTyped.addEventListener("click", () => submitTypedAnswer());
+  el.inputAnswer.addEventListener("keydown", e => {
+    if (e.key === "Enter") submitTypedAnswer();
+  });
+
+  el.btnShareWhatsapp.addEventListener("click", shareToWhatsapp);
+  el.btnPlayAgain.addEventListener("click", () => {
+    clearProgress();
+    showScreen("home");
+  });
+
+  el.audioPlayer.addEventListener("error", handleAudioError);
+}
+
+/* ---------------------------------------------------------
+   7. START FLOW (name capture + resume check)
+   --------------------------------------------------------- */
+function handleStartRequest(){
+  if (songs.length === 0){
+    showToast("No songs configured yet — add songs in js/app.js");
+    return;
+  }
+  const saved = loadProgress();
+  if (saved && saved.currentIndex < saved.order.length && !saved.finished){
+    el.resumeSummary.textContent =
+      `Your challenge is in progress. Continue?`;
+    openModal(el.modalResume);
+    return;
+  }
+  requestNameThenStart();
+}
+
+function requestNameThenStart(){
+  el.inputPlayerName.value = state.playerName || "";
+  el.nameError.hidden = true;
+  openModal(el.modalName);
+  setTimeout(() => el.inputPlayerName.focus(), 150);
+}
+
+function confirmNameAndBegin(){
+  const name = el.inputPlayerName.value.trim();
+  if (!name){
+    el.nameError.hidden = false;
+    return;
+  }
+  el.nameError.hidden = true;
+  state.playerName = name.slice(0, 24);
+  closeModal(el.modalName);
+  startNewChallenge();
+}
+
+/* ---------------------------------------------------------
+   8. CHALLENGE LIFECYCLE
+   --------------------------------------------------------- */
+function shuffledIndexes(count){
+  // Fisher-Yates shuffle — guarantees every song appears exactly once.
+  const arr = Array.from({ length: count }, (_, i) => i);
+  for (let i = arr.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function generateResultId(){
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no ambiguous chars
+  const block = () => Array.from({ length: 4 }, () =>
+    chars[Math.floor(Math.random() * chars.length)]).join("");
+  return `${block()}-${block()}`;
+}
+
+function startNewChallenge(){
+  state.order = shuffledIndexes(songs.length);
+  state.currentIndex = 0;
+  state.score = 0;
+  state.resultId = "";
+  saveProgress();
+  showScreen("game");
+  loadQuestion();
+}
+
+function resumeSavedGame(){
+  const saved = loadProgress();
+  if (!saved){ requestNameThenStart(); return; }
+  state.playerName = saved.playerName;
+  state.order = saved.order;
+  state.currentIndex = saved.currentIndex;
+  state.score = saved.score;
+  showScreen("game");
+  loadQuestion();
+}
+
+/* ---------------------------------------------------------
+   9. QUESTION FLOW
+   --------------------------------------------------------- */
+function loadQuestion(){
+  resetAnswerUI();
+
+  const total = state.order.length;
+  const songNum = state.currentIndex + 1;
+
+  el.songCounter.textContent = `SONG ${songNum} / ${total}`;
+  el.scorePill.textContent = `SCORE: ${state.score} / ${state.currentIndex}`;
+  updateProgressBar();
+  toggleMidGameAd(songNum);
+
+  el.phaseListen.hidden = false;
+  el.phaseAnswer.hidden = true;
+  el.loadError.hidden = true;
+  el.tapPlayMsg.hidden = true;
+  el.btnManualPlay.hidden = true;
+  el.clipHint.textContent = "Playing 30-second clip…";
+  el.discSpinner.classList.remove("paused");
+
+  resetCountdownRing();
+  playCurrentClip();
+}
+
+function currentSong(){
+  const songIndex = state.order[state.currentIndex];
+  return songs[songIndex];
+}
+
+function updateProgressBar(){
+  const total = state.order.length;
+  const pct = total ? Math.round((state.currentIndex / total) * 100) : 0;
+  el.progressFill.style.width = pct + "%";
+  el.progressBar.setAttribute("aria-valuenow", String(pct));
+}
+
+function toggleMidGameAd(songNum){
+  const every = competitionConfig.midGameAdEvery;
+  const show = every > 0 && songNum > 1 && (songNum - 1) % every === 0;
+  el.midGameAd.hidden = !show;
+}
+
+/* ---------------------------------------------------------
+   10. AUDIO PLAYBACK — 30s clip, custom controls only
+   --------------------------------------------------------- */
+function playCurrentClip(){
+  const song = currentSong();
+  if (!song){ return; }
+
+  clearTimers();
+  el.loadError.hidden = true;
+  el.tapPlayMsg.hidden = true;
+  el.btnManualPlay.hidden = true;
+
+  const audio = el.audioPlayer;
+  audio.pause();
+  audio.removeAttribute("src");
+  audio.load(); // release previous resource before loading the next one
+
+  audio.src = song.file;
+  audio.currentTime = 0;
+  audio.controls = false; // never expose native controls
+
+  const playPromise = audio.play();
+
+  if (playPromise !== undefined){
+    playPromise
+      .then(() => beginCountdown())
+      .catch(() => {
+        // Autoplay blocked by the browser — ask for a manual tap.
+        el.tapPlayMsg.hidden = false;
+        el.btnManualPlay.hidden = false;
+        el.discSpinner.classList.add("paused");
+      });
+  } else {
+    beginCountdown();
+  }
+}
+
+function handleAudioError(){
+  clearTimers();
+  el.discSpinner.classList.add("paused");
+  el.loadError.hidden = false;
+  el.tapPlayMsg.hidden = true;
+  el.btnManualPlay.hidden = true;
+  el.clipHint.textContent = "";
+}
+
+function beginCountdown(){
+  el.discSpinner.classList.remove("paused");
+  el.clipHint.textContent = "Playing 30-second clip…";
+  state.clipSecondsLeft = competitionConfig.clipDuration;
+  updateCountdownDisplay();
+
+  state.clipTimer = setInterval(() => {
+    state.clipSecondsLeft -= 1;
+    updateCountdownDisplay();
+    if (state.clipSecondsLeft <= 0){
+      finishListenPhase();
+    }
+  }, 1000);
+
+  // Hard stop as a safety net in case setInterval drifts.
+  state.autoStopTimeout = setTimeout(finishListenPhase, (competitionConfig.clipDuration + 1) * 1000);
+}
+
+function updateCountdownDisplay(){
+  const s = Math.max(0, state.clipSecondsLeft);
+  el.countdownNum.textContent = s;
+  const fraction = s / competitionConfig.clipDuration;
+  const offset = RING_CIRCUMFERENCE * (1 - fraction);
+  el.countdownRing.style.strokeDashoffset = offset;
+}
+
+function resetCountdownRing(){
+  state.clipSecondsLeft = competitionConfig.clipDuration;
+  el.countdownNum.textContent = competitionConfig.clipDuration;
+  el.countdownRing.style.strokeDashoffset = "0";
+}
+
+function clearTimers(){
+  if (state.clipTimer){ clearInterval(state.clipTimer); state.clipTimer = null; }
+  if (state.autoStopTimeout){ clearTimeout(state.autoStopTimeout); state.autoStopTimeout = null; }
+}
+
+function finishListenPhase(){
+  clearTimers();
+  const audio = el.audioPlayer;
+  audio.pause();
+  el.discSpinner.classList.add("paused");
+  showAnswerPhase();
+}
+
+/* ---------------------------------------------------------
+   11. ANSWER PHASE — multiple choice (default) with a typed
+   fallback available if you set USE_TYPED_ANSWER = true.
+   --------------------------------------------------------- */
+const USE_TYPED_ANSWER = false;
+
+function buildChoices(correctSong){
+  const pool = songs
+    .map(s => s.title)
+    .filter(title => title !== correctSong.title);
+
+  // Shuffle the distractor pool, then take up to 3 unique wrong answers.
+  const shuffledPool = shuffledIndexes(pool.length).map(i => pool[i]);
+  const wrongAnswers = [];
+  for (const title of shuffledPool){
+    if (wrongAnswers.length >= 3) break;
+    if (!wrongAnswers.includes(title)) wrongAnswers.push(title);
+  }
+  // If the library is too small for 3 distractors (testing mode),
+  // pad with clearly-fake placeholders so the UI never breaks.
+  while (wrongAnswers.length < 3){
+    wrongAnswers.push(`Not "${correctSong.title}" #${wrongAnswers.length + 1}`);
+  }
+
+  const all = [correctSong.title, ...wrongAnswers];
+  const order = shuffledIndexes(4);
+  return order.map(i => all[i]);
+}
+
+function showAnswerPhase(){
+  const song = currentSong();
+  state.answered = false;
+  state.correctChoice = song.title;
+
+  el.phaseListen.hidden = true;
+  el.phaseAnswer.hidden = false;
+  el.answerFeedback.hidden = true;
+  el.answerFeedback.className = "answer-feedback";
+
+  if (USE_TYPED_ANSWER){
+    el.typeAnswerWrap.hidden = false;
+    el.choicesWrap.hidden = true;
+    el.choicesWrap.innerHTML = "";
+    el.inputAnswer.value = "";
+    el.inputAnswer.disabled = false;
+    el.btnSubmitTyped.disabled = false;
+    setTimeout(() => el.inputAnswer.focus(), 100);
+  } else {
+    el.typeAnswerWrap.hidden = true;
+    el.choicesWrap.hidden = false;
+    state.currentChoices = buildChoices(song);
+    renderChoices();
+  }
+}
+
+function renderChoices(){
+  const letters = ["A", "B", "C", "D"];
+  el.choicesWrap.innerHTML = "";
+  state.currentChoices.forEach((choiceText, idx) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "choice-btn";
+    btn.setAttribute("data-choice", choiceText);
+    btn.innerHTML = `<span class="choice-btn__letter">${letters[idx]}</span><span>${escapeHtml(choiceText)}</span>`;
+    btn.addEventListener("click", () => submitChoice(choiceText, btn));
+    el.choicesWrap.appendChild(btn);
+  });
+}
+
+function escapeHtml(str){
+  const div = document.createElement("div");
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function submitChoice(choiceText, btnEl){
+  if (state.answered) return; // one attempt only
+  state.answered = true;
+
+  const isCorrect = choiceText === state.correctChoice;
+  revealAnswerButtons(choiceText, isCorrect);
+  finalizeAnswer(isCorrect);
+}
+
+function revealAnswerButtons(selectedText, isCorrect){
+  const buttons = el.choicesWrap.querySelectorAll(".choice-btn");
+  buttons.forEach(btn => {
+    btn.disabled = true;
+    const text = btn.getAttribute("data-choice");
+    if (text === state.correctChoice){
+      btn.classList.add("is-correct");
+    } else if (text === selectedText && !isCorrect){
+      btn.classList.add("is-wrong");
+    } else {
+      btn.classList.add("is-dimmed");
+    }
+  });
+}
+
+function submitTypedAnswer(){
+  if (state.answered) return;
+  const typed = el.inputAnswer.value.trim();
+  if (!typed) return;
+  state.answered = true;
+  el.inputAnswer.disabled = true;
+  el.btnSubmitTyped.disabled = true;
+
+  const isCorrect = normalize(typed) === normalize(state.correctChoice);
+  finalizeAnswer(isCorrect);
+}
+
+function normalize(str){
+  return str.toLowerCase().trim().replace(/[^a-z0-9]/g, "");
+}
+
+function finalizeAnswer(isCorrect){
+  if (isCorrect) state.score++;
+
+  el.answerFeedback.hidden = false;
+  el.answerFeedback.classList.add(isCorrect ? "correct" : "wrong");
+  el.answerFeedback.textContent = isCorrect ? "✅ CORRECT! +1 POINT" : "❌ WRONG";
+
+  el.scorePill.textContent = `SCORE: ${state.score} / ${state.currentIndex + 1}`;
+
+  saveProgress();
+
+  setTimeout(advanceToNextSong, 1400);
+}
+
+function resetAnswerUI(){
+  el.choicesWrap.innerHTML = "";
+  el.answerFeedback.hidden = true;
+  el.inputAnswer.value = "";
+}
+
+/* ---------------------------------------------------------
+   12. ADVANCE / FINISH
+   --------------------------------------------------------- */
+function advanceToNextSong(){
+  state.currentIndex++;
+  saveProgress();
+
+  if (state.currentIndex >= state.order.length){
+    finishChallenge();
+  } else {
+    loadQuestion();
+  }
+}
+
+function finishChallenge(){
+  clearTimers();
+  el.audioPlayer.pause();
+
+  state.resultId = generateResultId();
+  markProgressFinished();
+
+  const total = state.order.length;
+  const pct = total ? Math.round((state.score / total) * 100) : 0;
+
+  el.resultPlayer.textContent = state.playerName || "Player";
+  el.resultScore.textContent = `${state.score} / ${total}`;
+  el.resultPercent.textContent = `${pct}%`;
+  el.resultId.textContent = state.resultId;
+
+  showScreen("results");
+}
+
+/* ---------------------------------------------------------
+   13. WHATSAPP SHARE
+   --------------------------------------------------------- */
+function shareToWhatsapp(){
+  const total = state.order.length;
+  const message =
+    `🎵 I just completed the ${competitionConfig.competitionName}!\n\n` +
+    `My score: ${state.score}/${total}\n` +
+    `Result ID: ${state.resultId}\n\n` +
+    `Highest score wins the ${competitionConfig.prize}! 🏆`;
+
+  const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
+  window.open(url, "_blank", "noopener");
+}
+
+/* ---------------------------------------------------------
+   14. LOCAL STORAGE (progress convenience only)
+
+   SECURITY / FAIRNESS NOTE:
+   This is a static, fully client-side application. Anything
+   stored here — or anywhere in the page's HTML/CSS/JS — is
+   visible and editable by a sufficiently determined user via
+   browser devtools or localStorage. This progress cache exists
+   purely so an accidental refresh doesn't lose someone's place
+   in the challenge — it is NOT a trusted competition record and
+   is never treated as one. The screenshot the participant sends
+   to the WhatsApp group, verified manually by the organizer, is
+   the only official result. The voucher password is never
+   stored anywhere in this app; it is sent privately and
+   separately by the organizer to the winner.
+   --------------------------------------------------------- */
+function saveProgress(){
+  try {
+    const payload = {
+      playerName: state.playerName,
+      order: state.order,
+      currentIndex: state.currentIndex,
+      score: state.score,
+      finished: false,
+      savedAt: Date.now()
+    };
+    localStorage.setItem(competitionConfig.storageKey, JSON.stringify(payload));
+  } catch (e){
+    // localStorage may be unavailable (private browsing etc.) — fail silently,
+    // the challenge still works, it just won't survive a refresh.
+  }
+}
+
+function markProgressFinished(){
+  try {
+    const raw = localStorage.getItem(competitionConfig.storageKey);
+    if (!raw) return;
+    const payload = JSON.parse(raw);
+    payload.finished = true;
+    localStorage.setItem(competitionConfig.storageKey, JSON.stringify(payload));
+  } catch (e){ /* no-op */ }
+}
+
+function loadProgress(){
+  try {
+    const raw = localStorage.getItem(competitionConfig.storageKey);
+    if (!raw) return null;
+    const payload = JSON.parse(raw);
+    if (!payload || !Array.isArray(payload.order)) return null;
+    return payload;
+  } catch (e){
+    return null;
+  }
+}
+
+function clearProgress(){
+  try { localStorage.removeItem(competitionConfig.storageKey); } catch (e){ /* no-op */ }
+  state.order = [];
+  state.currentIndex = 0;
+  state.score = 0;
+  state.resultId = "";
+}
+
+function checkForResumableProgress(){
+  const saved = loadProgress();
+  if (saved && !saved.finished && saved.currentIndex < saved.order.length && saved.order.length > 0){
+    state.playerName = saved.playerName || "";
+    // Resume offer surfaces the next time the user presses START —
+    // see handleStartRequest(). We don't interrupt the landing page itself.
+  }
+}
+
+/* ---------------------------------------------------------
+   15. BOOT
+   --------------------------------------------------------- */
+document.addEventListener("DOMContentLoaded", init);
+
+</script>
+</body>
+</html>
